@@ -13,12 +13,12 @@ class PostsController < ApplicationController
 
   # Create action saves the post into database
   def create
-    @post = Post.new
-    if @post.save(post_params)
-      flash[:notice] = "Successfully created post!"
-      redirect_to post_path(@post)
-    else
-      flash[:alert] = "Error creating new post!"
+		@post = Post.new(post_params)
+		if @post.save
+			flash[:notice] = "Successfully created post!"
+			redirect_to post_path(@post)
+		else
+			flash[:alert] = "Error creating new post!"
       render :new
     end
   end
@@ -61,4 +61,7 @@ class PostsController < ApplicationController
   def find_post
     @post = Post.find(params[:id])
   end
+  
+  #This authenticates admin whenever a post is to be created, updated or destroyed.
+  before_action :authenticate_admin!, except: [:index, :show]
 end
